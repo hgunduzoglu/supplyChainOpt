@@ -39,7 +39,7 @@ def flow_balance_rule(m, s, j):
 model.FlowBalance = pyo.Constraint(model.scenario, model.dc, rule=flow_balance_rule)
 
 def demand_satisfaction_rule(m, s, i):
-    return sum(m.y[s, j, i] for j in m.dc) == m.demand[s, i]
+    return sum(m.y[s, j, i] for j in m.dc) >= m.demand[s, i]
 model.DemandSatisfaction = pyo.Constraint(model.scenario, model.region, rule=demand_satisfaction_rule)
 
 
@@ -65,7 +65,7 @@ def expected_total_cost_rule(m):
 model.TotalExpectedCost = pyo.Objective(rule=expected_total_cost_rule, sense=pyo.minimize)
 
 # Solver seçimi
-solver = SolverFactory("glpk")  
+solver = SolverFactory("gurobi")  
 
 # Modeli çöz
 result = solver.solve(model, tee=False)  
